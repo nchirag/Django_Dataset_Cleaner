@@ -3,52 +3,262 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSV File Upload</title>
+    <title>DataCleaner | CSV File Upload</title>
+    <style>
+        :root {
+            --primary: #4a89dc;
+            --primary-light: #5d9cec;
+            --secondary: #48cfad;
+            --dark: #434a54;
+            --light: #f5f7fa;
+            --gray: #e6e9ed;
+            --success: #8cc152;
+            --warning: #f6bb42;
+            --error: #da4453;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+        }
+        
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        
+        .upload-section {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            border: 2px dashed var(--gray);
+            transition: all 0.3s;
+        }
+        
+        .upload-section:hover {
+            border-color: var(--primary);
+        }
+        
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        
+        .file-upload-label {
+            display: block;
+            padding: 15px 25px;
+            background: var(--primary);
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: 500;
+        }
+        
+        .file-upload-label:hover {
+            background: var(--primary-light);
+        }
+        
+        .file-upload-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .message {
+            text-align: center;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-weight: 500;
+        }
+        
+        .success {
+            background: rgba(140, 193, 82, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+        
+        .stats-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        
+        .stats-table th {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+        
+        .stats-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--gray);
+        }
+        
+        .stats-table tr:nth-child(even) {
+            background: var(--light);
+        }
+        
+        .stats-table tr:hover {
+            background: rgba(74, 137, 220, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .stats-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Upload Your CSV File</h1>
-    <form action="{% url 'upload_file' %}" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <label for="fileSelect">Upload your CSV file</label>
-        <input id="fileSelect" type="file" name="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
-        <br><br>
-        <button type="submit">Upload</button>
-    </form>
-    {% if message %}
-    <p style="color: green;">{{ message }}</p>
-    {% endif %}
-
-    <form action="{% url 'dataset_description' %}" method="get">
-        <button type="submit">Start Analysis</button>
-    </form>
-
-    <table border="1">
-        <tr>
-            <th>Column</th>
-            <th>Count</th>
-            <th>Mean</th>
-            <th>Standard Deviation</th>
-            <th>Minimum</th>
-            <th>25 %</th>
-            <th>50 %</th>
-            <th>75 %</th>
-            <th>Max</th>
-        </tr>
+    <div class="container">
+        <h1>Upload Your Dataset</h1>
+        
+        <div class="upload-section">
+            <form action="{% url 'upload_file' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="file-upload">
+                    <label for="fileSelect" class="file-upload-label">
+                        <i class="fas fa-cloud-upload-alt"></i> Choose CSV or Excel File
+                    </label>
+                    <input id="fileSelect" class="file-upload-input" type="file" name="file" 
+                           accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary">Upload File</button>
+                </div>
+            </form>
+            
+            {% if message %}
+            <div class="message success">
+                {{ message }}
+            </div>
+            {% endif %}
+            
+            <form action="{% url 'dataset_description' %}" method="get">
+                <div class="button-group">
+                    <button type="submit" class="btn btn-secondary">Start Analysis</button>
+                </div>
+            </form>
+        </div>
+        
         {% if description %}
-            {% for row in description %}
-        <tr>
-            <td>{{ row.column }}</td>
-            <td>{{ row.count }}</td>
-            <td>{{ row.mean }}</td>
-            <td>{{ row.std }}</td>
-            <td>{{ row.min_value }}</td>
-            <td>{{ row.percentile_25 }}</td>
-            <td>{{ row.percentile_50 }}</td>
-            <td>{{ row.percentile_75 }}</td>
-            <td>{{ row.max_value }}</td>
-        </tr>
-            {% endfor %}
+        <div class="table-responsive">
+            <table class="stats-table">
+                <thead>
+                    <tr>
+                        <th>Column</th>
+                        <th>Count</th>
+                        <th>Mean</th>
+                        <th>Std Dev</th>
+                        <th>Minimum</th>
+                        <th>25%</th>
+                        <th>50%</th>
+                        <th>75%</th>
+                        <th>Maximum</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in description %}
+                    <tr>
+                        <td>{{ row.column }}</td>
+                        <td>{{ row.count }}</td>
+                        <td>{{ row.mean }}</td>
+                        <td>{{ row.std }}</td>
+                        <td>{{ row.min_value }}</td>
+                        <td>{{ row.percentile_25 }}</td>
+                        <td>{{ row.percentile_50 }}</td>
+                        <td>{{ row.percentile_75 }}</td>
+                        <td>{{ row.max_value }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% endif %}
-    </table>
+    </div>
+    
+    <!-- Font Awesome for icons (optional) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </body>
 </html>
