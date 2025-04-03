@@ -24,4 +24,5 @@ urlpatterns = [
     path('cleaning/',cleaning,name = "cleaning"),
     path('upload_file/',upload_file,name='upload_file'),
     path('dataset_description/',dataset_description,name='dataset_description'),
+    path('detect_issues/',detect_issues,name='detect_issues'),
 ]

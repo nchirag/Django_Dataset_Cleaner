@@ -3,202 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DataCleaner | CSV File Upload</title>
+    <title>DataCleaner | CSV File Analysis</title>
     <style>
         :root {
-            --primary: #4a89dc;
-            --primary-light: #5d9cec;
-            --secondary: #48cfad;
-            --dark: #434a54;
-            --light: #f5f7fa;
-            --gray: #e6e9ed;
-            --success: #8cc152;
-            --warning: #f6bb42;
-            --error: #da4453;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --primary-color: #4a89dc;
+            --secondary-color: #5d9cec;
+            --accent-color: #48cfad;
+            --background-color: #f5f7fa;
+            --text-color: #434a54;
+            --light-gray: #e6e9ed;
+            --border-radius: 6px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s ease;
         }
         
         body {
-            background-color: var(--light);
-            color: var(--dark);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
             line-height: 1.6;
-            padding: 20px;
+            margin: 0;
+            padding: 20px 0;
         }
         
         .container {
+            width: 90%;
             max-width: 1200px;
             margin: 0 auto;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            padding: 30px;
+            padding: 20px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
         }
         
-        h1 {
-            color: var(--primary);
-            text-align: center;
-            margin-bottom: 30px;
-            font-weight: 600;
-        }
-        
-        .upload-section {
-            background: var(--light);
-            border-radius: 8px;
-            padding: 30px;
-            margin-bottom: 30px;
-            text-align: center;
-            border: 2px dashed var(--gray);
-            transition: all 0.3s;
-        }
-        
-        .upload-section:hover {
-            border-color: var(--primary);
-        }
-        
-        .file-upload {
-            position: relative;
-            display: inline-block;
+        h1, h2 {
+            color: var(--primary-color);
+            font-weight: 300;
             margin-bottom: 20px;
         }
         
+        h1 {
+            font-size: 2.2rem;
+            border-bottom: 1px solid var(--light-gray);
+            padding-bottom: 10px;
+        }
+        
+        h2 {
+            font-size: 1.6rem;
+            color: var(--accent-color);
+        }
+        
+        .file-upload {
+            margin-bottom: 25px;
+        }
+        
         .file-upload-label {
-            display: block;
-            padding: 15px 25px;
-            background: var(--primary);
+            display: inline-block;
+            padding: 12px 20px;
+            background-color: var(--secondary-color);
             color: white;
-            border-radius: 5px;
+            border-radius: var(--border-radius);
             cursor: pointer;
-            transition: background 0.3s;
-            font-weight: 500;
+            transition: var(--transition);
+            margin-bottom: 10px;
         }
         
         .file-upload-label:hover {
-            background: var(--primary-light);
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
         }
         
         .file-upload-input {
-            position: absolute;
-            left: 0;
-            top: 0;
-            opacity: 0;
+            display: none;
+        }
+        
+        .data-table {
             width: 100%;
-            height: 100%;
-            cursor: pointer;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 0.9em;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .data-table th {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: left;
+            font-weight: 500;
+        }
+        
+        .data-table th, 
+        .data-table td {
+            padding: 12px 15px;
+            border: 1px solid var(--light-gray);
+        }
+        
+        .data-table tr {
+            border-bottom: 1px solid var(--light-gray);
+            transition: var(--transition);
+        }
+        
+        .data-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .data-table tr:hover {
+            background-color: #f1f5fd;
+        }
+        
+        .table-container {
+            margin: 40px 0;
+            padding: 20px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
         }
         
         .button-group {
+            margin: 30px 0;
             display: flex;
             justify-content: center;
             gap: 15px;
-            margin-top: 20px;
         }
         
         .btn {
-            padding: 12px 25px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 5px;
-            font-weight: 600;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: var(--transition);
         }
         
         .btn-primary {
-            background: var(--primary);
+            background-color: var(--primary-color);
             color: white;
         }
         
         .btn-primary:hover {
-            background: var(--primary-light);
+            background-color: #3a70c2;
             transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         
         .btn-secondary {
-            background: white;
-            color: var(--primary);
-            border: 2px solid var(--primary);
+            background-color: var(--accent-color);
+            color: white;
         }
         
         .btn-secondary:hover {
-            background: var(--primary);
-            color: white;
+            background-color: #37bc9b;
             transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         
         .message {
-            text-align: center;
-            padding: 15px;
             margin: 20px 0;
-            border-radius: 5px;
-            font-weight: 500;
-        }
-        
-        .success {
-            background: rgba(140, 193, 82, 0.2);
-            color: var(--success);
-            border: 1px solid var(--success);
-        }
-        
-        .stats-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 30px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-            border-radius: 8px;
-        }
-        
-        .stats-table th {
-            background: var(--primary);
-            color: white;
             padding: 15px;
-            text-align: left;
+            background-color: #e8f8f0;
+            color: #27ae60;
+            border-radius: var(--border-radius);
+            border-left: 4px solid #2ecc71;
         }
         
-        .stats-table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid var(--gray);
-        }
-        
-        .stats-table tr:nth-child(even) {
-            background: var(--light);
-        }
-        
-        .stats-table tr:hover {
-            background: rgba(74, 137, 220, 0.1);
+        .upload-section {
+            padding: 30px;
+            background-color: #f8fafc;
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
         }
         
         @media (max-width: 768px) {
             .container {
+                width: 95%;
                 padding: 15px;
             }
             
-            .button-group {
-                flex-direction: column;
+            .data-table {
+                font-size: 0.8em;
             }
             
-            .stats-table {
-                display: block;
-                overflow-x: auto;
+            .data-table th, 
+            .data-table td {
+                padding: 8px 10px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Upload Your Dataset</h1>
+        <h1>Dataset Analysis Tool</h1>
         
+        <!-- File Upload Section -->
         <div class="upload-section">
             <form action="{% url 'upload_file' %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="file-upload">
                     <label for="fileSelect" class="file-upload-label">
-                        <i class="fas fa-cloud-upload-alt"></i> Choose CSV or Excel File
+                        Choose CSV or Excel File
                     </label>
                     <input id="fileSelect" class="file-upload-input" type="file" name="file" 
                            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
@@ -210,21 +214,27 @@
             </form>
             
             {% if message %}
-            <div class="message success">
+            <div class="message">
                 {{ message }}
             </div>
             {% endif %}
-            
-            <form action="{% url 'dataset_description' %}" method="get">
-                <div class="button-group">
-                    <button type="submit" class="btn btn-secondary">Start Analysis</button>
-                </div>
-            </form>
         </div>
-        
+
+        <!-- Data Preview Section (Always Visible) -->
+        {% if dataset_preview %}
+        <div class="table-container">
+            <h2>Dataset Preview</h2>
+            <table class="data-table">
+                {{ dataset_preview|safe }}
+            </table>
+        </div>
+        {% endif %}
+
+        <!-- Dataset Statistics Section (Always Visible if Available) -->
         {% if description %}
-        <div class="table-responsive">
-            <table class="stats-table">
+        <div class="table-container">
+            <h2>Dataset Statistics</h2>
+            <table class="data-table">
                 <thead>
                     <tr>
                         <th>Column</th>
@@ -256,9 +266,41 @@
             </table>
         </div>
         {% endif %}
+
+        <!-- Data Issues Section (Always Visible if Available) -->
+        {% if issues %}
+        <div class="table-container">
+            <h2>Data Quality Issues</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Column</th>
+                        <th>Issue Type</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for issue in issues %}
+                    <tr>
+                        <td>{{ issue.column }}</td>
+                        <td>{{ issue.issue_type }}</td>
+                        <td>{{ issue.value }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+        <p>Issues length: {{ issues|length }}</p>
+        <!-- Analysis Actions (Always Available if a File is Uploaded) -->
+        {% if dataset_preview %}
+        <div class="button-group">
+            <form action="{% url 'dataset_description' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-secondary">Run Analysis</button>
+            </form>
+        </div>
+        {% endif %}
     </div>
-    
-    <!-- Font Awesome for icons (optional) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </body>
 </html>

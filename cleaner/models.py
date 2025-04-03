@@ -20,3 +20,15 @@ class DatasetStatistics(models.Model):
     
     def __str__(self):
         return f"Statistics of {self.file.file.name}"
+    
+
+class DetectedIssue(models.Model):
+    file = models.ForeignKey(File, on_delete=models.CASCADE)
+    column = models.TextField()
+    issue_type = models.CharField(max_length=255)
+    value = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Issue: {self.issue_type} in {self.file.file.name}"
+
